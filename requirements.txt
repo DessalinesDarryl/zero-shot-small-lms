@@ -3,4 +3,5 @@ torch
 scikit-learn
 datasets
 tqdm
-
+matplotlib
+seaborn

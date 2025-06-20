@@ -19,7 +19,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--dataset', type=str, required=True, help="Nom du dataset (ex: sms)")
     parser.add_argument('--model', type=str, default="MBZUAI/LaMini-Flan-T5-783M", help="Nom du modèle HF")
-    parser.add_argument('--max_samples', type=int, default=5, help="Nb de samples à traiter")
+    parser.add_argument('--prompt', type=str, default=None, help="Chemin vers le fichier de prompt (json)")
+    parser.add_argument('--max_samples', type=int, default=100, help="Nb de samples à traiter")
     parser.add_argument('--scoring', choices=['decoding', 'label'], default="decoding", help="Méthode de scoring")
     parser.add_argument('--save_results', action='store_true', help="Sauver les résultats dans /results")
     args = parser.parse_args()
@@ -31,7 +32,8 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    prompt_info = load_prompt(f"prompts/{args.dataset}.json")
+    prompt_file = args.prompt if args.prompt else f"prompts/{args.dataset}.json"
+    prompt_info = load_prompt(prompt_file)
     prompt_template = prompt_info["prompt"]
     verbalizer = prompt_info["verbalizer"]
     samples = prompt_info["samples"][:args.max_samples]
@@ -130,8 +132,8 @@ def main():
 
     if args.save_results:
         Path("results").mkdir(exist_ok=True)
-        model_name = args.model.split("/")[-1]
-        out_path = f"results/{args.dataset}_{model_name}_{args.scoring}.json"
+        prompt_name = Path(prompt_file).stem
+        out_path = f"results/{prompt_name}_{args.scoring}.json"
 
         with open(out_path, "w", encoding="utf-8") as f:
             json.dump({

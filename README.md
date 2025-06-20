@@ -20,9 +20,8 @@ Trois datasets sont utilisés :
 
 | Dataset   | Tâche                      | Nombre de classes | Description rapide                                   |
 |-----------|----------------------------|--------------------|------------------------------------------------------|
-| sms       | Spam vs Ham                | 2                  | Classer un message SMS comme spam ou ham             |
 | imdb      | Sentiment Analysis         | 2                  | Classer une critique de film en positif ou négatif   |
-| emotion   | Emotion Classification     | 6                  | Classer un texte selon l'émotion exprimée            |
+| agnews   | ...     | 5                  | ...            |
 
 ### b. Création de fichiers de prompt
 
@@ -77,7 +76,7 @@ pip install -r requirements.txt
 ### b. Création des prompts 
 
 ```bash
-Les promts sont générés depuis le fichier notebooks/analysis.ipynb
+Les prompts sont générés depuis le fichier notebooks/analysis.ipynb
 ```
 
 ### c. Lancement des classifications
@@ -96,4 +95,6 @@ python run_experiment.py --dataset emotion --scoring decoding --max_samples 20 -
 python run_experiment.py --dataset emotion --scoring label --max_samples 20 --save_results # methode label
 ```
 
+## 4. Résultats
 
+![image](./results/summary_plot.png)
