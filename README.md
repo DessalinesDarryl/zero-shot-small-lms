@@ -54,7 +54,7 @@ Les métriques suivantes sont calculées :
 
 - Accuracy
 - F1-score (avec moyenne `"binary"` pour les tâches binaires, `"weighted"` sinon)
-- Baselines optionnelles :
+- Baselines :
   - Prédiction de la classe majoritaire
   - Prédiction aléatoire uniforme
 
@@ -72,3 +72,28 @@ Les résultats sont sauvegardés dans le dossier `results/` sous forme de fichie
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+```
+
+### b. Création des prompts 
+
+```bash
+Les promts sont générés depuis le fichier notebooks/analysis.ipynb
+```
+
+### c. Lancement des classifications
+
+```bash
+# Pour le sms dataset 
+python run_experiment.py --dataset sms --scoring decoding --max_samples 20 --save_results # methode decoding
+python run_experiment.py --dataset sms --scoring label --max_samples 20 --save_results # methode label
+
+# Pour le imdb dataset
+python run_experiment.py --dataset imdb --scoring decoding --max_samples 20 --save_results # methode decoding
+python run_experiment.py --dataset imdb --scoring label --max_samples 20 --save_results # methode label
+
+# Pour le emotion dataset
+python run_experiment.py --dataset emotion --scoring decoding --max_samples 20 --save_results # methode decoding
+python run_experiment.py --dataset emotion --scoring label --max_samples 20 --save_results # methode label
+```
+
+
