@@ -1,12 +1,14 @@
 # run_experiment.py
 
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import json
 from pathlib import Path
 import torch
 from sklearn.metrics import accuracy_score, f1_score
 from tqdm import tqdm
+from collections import Counter
+import random
 
 
 def load_prompt(prompt_file: str):
@@ -78,7 +80,7 @@ def main():
                 with torch.no_grad():
                     outputs = model(**inputs, labels=inputs["input_ids"])
                     loss = outputs.loss.item()
-                scores[label] = -loss  # car plus la loss est faible, mieux c’est
+                scores[label] = -loss
 
             pred = max(scores, key=scores.get)
             y_pred.append(pred)
@@ -103,10 +105,25 @@ def main():
         else:
             f1 = f1_score(y_true_f, y_pred_f, average="binary")
 
+        # Baselines
+        majority_class = Counter(y_true_f).most_common(1)[0][0]
+        y_majority = [majority_class] * len(y_true_f)
+        acc_majority = accuracy_score(y_true_f, y_majority)
+        f1_majority = f1_score(y_true_f, y_majority, average="weighted")
+
+        random.seed(42)
+        labels = list(set(y_true_f))
+        y_random = [random.choice(labels) for _ in y_true_f]
+        acc_random = accuracy_score(y_true_f, y_random)
+        f1_random = f1_score(y_true_f, y_random, average="weighted")
 
         print("\n=== Résultats ===")
         print(f"Accuracy : {acc:.4f}")
         print(f"F1-score : {f1:.4f}")
+        print("\n=== Baselines ===")
+        print(f"Majority - Accuracy: {acc_majority:.4f} | F1: {f1_majority:.4f}")
+        print(f"Random   - Accuracy: {acc_random:.4f} | F1: {f1_random:.4f}")
+
     else:
         print("\nAucune prédiction exploitable.")
         acc, f1 = None, None
@@ -124,11 +141,12 @@ def main():
                 "y_true": y_true,
                 "y_pred": y_pred,
                 "accuracy": acc,
-                "f1": f1
+                "f1": f1,
+                "baseline_majority": {"accuracy": acc_majority, "f1": f1_majority},
+                "baseline_random": {"accuracy": acc_random, "f1": f1_random}
             }, f, indent=2)
 
         print(f"\nRésultats sauvegardés dans {out_path}")
-
 
 if __name__ == "__main__":
     main()
