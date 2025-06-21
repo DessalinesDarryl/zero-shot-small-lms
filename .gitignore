@@ -3,6 +3,5 @@ __pycache__/
 *.ckpt
 *.pt
 .env/
-results/
 .venv/
 
