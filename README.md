@@ -2,6 +2,8 @@
 
 This project aims to evaluate the capability of small language models (such as LaMini-Flan-T5-783M) to solve **zero-shot** classification tasks, that is, without training on the target data.
 
+link to the repository : https://github.com/DessalinesDarryl/zero-shot-small-lms
+
 ---
 
 ## 1. Objective
