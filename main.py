@@ -1,5 +1,3 @@
-# run_experiment.py
-
 from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
 import argparse
 import json
